@@ -46,5 +46,6 @@ class GetpatentItem(scrapy.Item):
     Inventors = Field()  # 发明人 V
     External_Links = Field()
 
-    Cited_patent = Field()#是一个dataframe形式的表格，或字符串
+    Cited_patent = Field()#是一个dict形式的表格，或字符串
+    Referenced_by = Field()
     pass

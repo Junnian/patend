@@ -7,8 +7,6 @@ from scrapy.http import Request
 from scrapy.selector import Selector
 import time
 from random import random
-import numpy as np
-from pandas import DataFrame
 
 
 '''
@@ -112,27 +110,31 @@ class ScholarSpider(scrapy.Spider):
             print('-----------4444----------------',nexturl_2)
             url = nexturl_2[1]
             yield Request(url = Url+url,callback = self.parse1,dont_filter=True)
-        else:
-            print('-----------8----------------')
-            nowurl = response.url
-            #得到下一页页码
-            a = nowurl.split('start=')
-            b = a[-1].split('&')
-            c = b[0]
-            N = int(c)
-            N = N+10
+        # elif len(nexturl_2)==2: 
+        #     print('-----------4444----------------',nexturl_2)
+        #     url = nexturl_2[1]
+        #     yield Request(url = Url+url,callback = self.parse1,dont_filter=True)
+        # elif len(detailurls):
+        #     print('-----------8----------------')
+        #     nowurl = response.url
+        #     #得到下一页页码
+        #     a = nowurl.split('start=')
+        #     b = a[-1].split('&')
+        #     c = b[0]
+        #     N = int(c)
+        #     N = N+10
 
-            #得到当前关键词
-            a = nowurl.split('q=')
-            b = a[1].split('&')
-            key = b[0]
+        #     #得到当前关键词
+        #     a = nowurl.split('q=')
+        #     b = a[1].split('&')
+        #     key = b[0]
          
-            nexturl = 'https://www.google.com.hk/search?q='+key+'&tbm=pts&start='+str(N)
-            yield Request(url = nexturl,callback = self.parse1,dont_filter=True)
+        #     nexturl = 'https://www.google.com.hk/search?q='+key+'&tbm=pts&start='+str(N)
+        #     yield Request(url = nexturl,callback = self.parse1,dont_filter=True)
 
-            with open('./worng_html.txt','w+') as f:
-                f.write('1111')
-                f.write(response.body)
+        #     with open('./worng_html.txt','w+') as f:
+        #         f.write('1111')
+        #         f.write(response.body)
         # yield Request(url = response.url,callback = self.nexturl,dont_filter=True)
         #接下来的页
         # nexturl_1 = response.xpath('//*[@class="b"]/a/@href').extract()
@@ -321,11 +323,6 @@ class ScholarSpider(scrapy.Spider):
 #'https://www.google.com/patents/US8720825?dq=aerospace&hl=en&sa=X&ved=0ahUKEwib9M3io-bXAhWqsVQKHUoTBcsQ6AEIKDAA'
         #怎么和
         if tablehead:
-            # a = tablehead[0]
-            # b = tablehead[1]
-            # c = tablehead[2]
-            # d = tablehead[3]
-            # d = tablehead[4]
             seccol = stclo[0::2]
             thirdcol = stclo[1::2]
             fifcol = ffclo[0::2]
@@ -342,7 +339,47 @@ class ScholarSpider(scrapy.Spider):
             # table = DataFrame(d)
             # print table
             item['Cited_patent'] = d
-    
+        else:
+            item['Cited_patent'] = ''
+
+
+        #下面处理REFERENCED BY  
+        #这是专利的表头
+        tablehead = sel.xpath('//span[text()="Referenced by"]/parent::*/following::*[1]//thead//th//text()').extract()
+        #这是第一列，Cited Patent
+        cited_patent = sel.xpath('//span[text()="Referenced by"]/parent::*/following::*[1]//thead/parent::*//td/a/text()').extract()
+        #这是第二列第三列[col2,col3,col2,co3.....]
+        stclo = sel.xpath('//span[text()="Referenced by"]/parent::*/following::*[1]//thead/parent::*[1]//td[@class="patent-data-table-td patent-date-value"]//text()').extract()
+        #这是第四列第五列
+        ffclo =  sel.xpath('//span[text()="Referenced by"]/parent::*/following::*[1]//thead/parent::*[1]//td[@class="patent-data-table-td "]//text()').extract()
+        #下面就是把这四项合成一个表格了
+#'https://www.google.com/patents/US8720825?dq=aerospace&hl=en&sa=X&ved=0ahUKEwib9M3io-bXAhWqsVQKHUoTBcsQ6AEIKDAA'
+        #怎么和
+        if tablehead:
+            seccol = stclo[0::2]
+            thirdcol = stclo[1::2]
+            fifcol = ffclo[0::2]
+            fivcol = ffclo[1::2]
+            print tablehead
+            d = {
+                tablehead[0]:cited_patent,
+                tablehead[1]:seccol,
+                tablehead[2]:thirdcol,
+                tablehead[3]:fifcol,
+                tablehead[4]:fivcol
+            }
+            # print d
+            # table = DataFrame(d)
+            # print table
+            item['Referenced_by'] = d
+        else:
+            item['Referenced_by'] = ''
+
+
+
+
+
+
 
         # i = GetauthorItem()
         # url = response.url
