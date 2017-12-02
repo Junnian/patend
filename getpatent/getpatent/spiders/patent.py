@@ -76,7 +76,7 @@ class ScholarSpider(scrapy.Spider):
             # yield Request(url=url, callback=self.parse1)
             req = Request(url= url,callback = self.parse1)
             reqs.append(req)
-        return reqs
+            yield reqs
         
     def parse1 (self, response):
         #这个解析函数先处理每个领域第一页的人，用selector
@@ -138,76 +138,11 @@ class ScholarSpider(scrapy.Spider):
             req =  Request(url = nexturl,callback = self.parse1,dont_filter=True)
             reqs.append(req)
             # yield Request(url = url,callback = self.parse_info,dont_filter=True)
-        return reqs 
+        yield reqs 
             # with open('./worng_html.txt','w+') as f:
             #     f.write('1111')
             #     f.write(response.body)
-        # yield Request(url = response.url,callback = self.nexturl,dont_filter=True)
-        #接下来的页
-        # nexturl_1 = response.xpath('//*[@class="b"]/a/@href').extract()
-        # nexturl_2 = response.xpath('//*[@class="b navend"]/a/@href').extract()
-        # print('-=----------------',nexturl_2,nexturl_1)
-        # if len(nexturl_1)==1: url = nexturl_1[0]
-        # if len(nexturl_1)==2: url = nexturl_1[1]
-        # if len(nexturl_2)==2: url = nexturl_2[1]
-        # if len(nexturl_2)==1: url = nexturl_2[0]
 
-    # def nexturl(self,response):
-        
-        #这个解析函数先处理每个领域第一页的人，用selector
-
-        #得到专利详情页
-        # sel = Selector(response)
-        # detailurls = sel.xpath('//*[@class="r"]//a[contains(@href,"/patents/")]/@href').extract()
-
-        # for url in detailurls:
-        #     yield Request(url = url,callback = self.parse_info,dont_filter=True
-
-
-        # #下一页的链接可能有这两种情况
-        # nexturl = sel.xpath('//*[text()="Next"]/parent::*/@href').extract()
-        # nexturl2 = sel.xpath('//*[text()="Next"]/@href').extract()
-        # nexturl_1= response.xpath('//*[@class="b"]/a/@href').extract()
-        # nexturl_2 = response.xpath('//*[@class="b navend"]/a/@href').extract()
-        # print('---------------111--------------',nexturl)
-        # print('-----------3----------------',nexturl_1)
-        # print('-----------3----------------',nexturl_2)
-
-        # if nexturl:
-        #     if nexturl:
-        #         url = nexturl[0]
-        #         yield Request(url = Url+url,callback = self.nexturl,dont_filter=True)
-        # elif len(nexturl)==0:
-        #     print('-------------222---------------',nexturl2)
-        #     if nexturl2:
-        #         url = nexturl2[0]
-        #         yield Request(url = Url+url,callback = self.nexturl,dont_filter=True)
-        # elif len(nexturl_1)==2:
-        #     print('-----------3----------------',nexturl_1)
-        #     url = nexturl_1[1]
-        #     yield Request(url = Url+url,callback = self.nexturl,dont_filter=True)
-        # elif len(nexturl_2)==2: 
-        #     print('-----------4444----------------',nexturl_2)
-        #     url = nexturl_2[1]
-        #     yield Request(url = Url+url,callback = self.nexturl,dont_filter=True)
-        # else:
-        #     print('-----------8----------------')
-        #     nowurl = response.url
-        #     a = nowurl.split('start=')
-        #     b = a[-1].split('&')
-        #     c = b[0]
-        #     N = int(c)
-        #     N = N+10
-        #     nexturl = 'https://www.google.com.hk/search?q=aerospace&tbm=pts&start='+str(N)
-        #     yield Request(url = nexturl,callback = self.nexturl,dont_filter=True)
-
-        #     with open('./worng_html.txt','w+') as f:
-        #         f.write('1111')
-        #         f.write(response.bogy)        
-        # if 'http' not in url:
-        #     yield Request(url = Url+url,callback = self.parse1,dont_filter=True)
-        # else:
-        #     yield Request(url = url,callback = self.parse1,dont_filter=True)
   
 
     def parse_info(self, response):
