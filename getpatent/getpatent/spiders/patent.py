@@ -85,7 +85,7 @@ class ScholarSpider(scrapy.Spider):
             req = Request(url,callback = self.parse_info,dont_filter=True)
             reqs.append(req)
             # yield Request(url = url,callback = self.parse_info,dont_filter=True)
-        yield reqs    
+        # yield reqs    
         # nexturl = sel.xpath('//*[text()="Next"]/parent::*/@href').extract()
         # nexturl2 = sel.xpath('//*[text()="Next"]/@href').extract()
         # nexturl_1= response.xpath('//*[@class="b"]/a/@href').extract()
@@ -131,8 +131,10 @@ class ScholarSpider(scrapy.Spider):
             key = b[0]
          
             nexturl = 'https://www.google.com.hk/search?q='+key+'&tbm=pts&start='+str(N)
-            yield Request(url = nexturl,callback = self.parse1,dont_filter=True)
-
+            req =  Request(url = nexturl,callback = self.parse1,dont_filter=True)
+            reqs.append(req)
+            # yield Request(url = url,callback = self.parse_info,dont_filter=True)
+        return reqs 
             # with open('./worng_html.txt','w+') as f:
             #     f.write('1111')
             #     f.write(response.body)
