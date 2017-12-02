@@ -153,7 +153,7 @@ class ScholarSpider(scrapy.Spider):
         item = GetpatentItem()
         sel = Selector(response)
         title = sel.xpath('//span[@class="patent-title"]//invention-title/text()').extract()
-        yield item
+        
 #         print response.url
         
 #         item['Url'] = response.url
@@ -170,12 +170,12 @@ class ScholarSpider(scrapy.Spider):
         
 
 #         #右边卡片中的信息
-#         now = sel.xpath('//*[text()="Publication number"]/following::*[1]/text()').extract()
-#         if now:
-#             item['Publication_number'] = now[0]
-#         else:
-#             item['Publication_number'] = ''
-
+        now = sel.xpath('//*[text()="Publication number"]/following::*[1]/text()').extract()
+        if now:
+            item['Publication_number'] = now[0]
+        else:
+            item['Publication_number'] = ''
+        yield item
 #         now = sel.xpath('//*[text()="Publication type"]/following::*[1]/text()').extract()
 #         if now:
 #             item['Publication_type'] = now[0]
