@@ -65,7 +65,7 @@ class ScholarSpider(scrapy.Spider):
     peopleUrl = set() #记录已经爬的主页
 
     def start_requests(self):
-        reqs = []
+
         while self.scrawl_ID.__len__():
             print self.scrawl_ID.__len__()
             field = self.scrawl_ID.pop()
@@ -75,8 +75,7 @@ class ScholarSpider(scrapy.Spider):
             url = 'https://www.google.com/search?q='+field+'&tbm=pts&start=00'
             # yield Request(url=url, callback=self.parse1)
             req = Request(url= url,callback = self.parse1)
-            reqs.append(req)
-            yield reqs
+            yield req
         
     def parse1 (self, response):
         #这个解析函数先处理每个领域第一页的人，用selector
@@ -138,7 +137,8 @@ class ScholarSpider(scrapy.Spider):
             req =  Request(url = nexturl,callback = self.parse1,dont_filter=True)
             reqs.append(req)
             # yield Request(url = url,callback = self.parse_info,dont_filter=True)
-        yield reqs 
+        for req in reqs:
+            yield req
             # with open('./worng_html.txt','w+') as f:
             #     f.write('1111')
             #     f.write(response.body)
