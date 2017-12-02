@@ -153,172 +153,173 @@ class ScholarSpider(scrapy.Spider):
         item = GetpatentItem()
         sel = Selector(response)
         title = sel.xpath('//span[@class="patent-title"]//invention-title/text()').extract()
-        print response.url
+        yield item
+#         print response.url
         
-        item['Url'] = response.url
+#         item['Url'] = response.url
 
-        if title:
-            item['Title'] = title[0]
-        else:
-            item['Title'] = ''
-        abstract =sel.xpath('//*[text()="Abstract"]/parent::*/following-sibling::*//text()').extract()
-        if abstract:
-            item['Abstract'] = abstract[0]
-        else:
-            item['Abstract'] = ''
+#         if title:
+#             item['Title'] = title[0]
+#         else:
+#             item['Title'] = ''
+#         abstract =sel.xpath('//*[text()="Abstract"]/parent::*/following-sibling::*//text()').extract()
+#         if abstract:
+#             item['Abstract'] = abstract[0]
+#         else:
+#             item['Abstract'] = ''
         
 
-        #右边卡片中的信息
-        now = sel.xpath('//*[text()="Publication number"]/following::*[1]/text()').extract()
-        if now:
-            item['Publication_number'] = now[0]
-        else:
-            item['Publication_number'] = ''
+#         #右边卡片中的信息
+#         now = sel.xpath('//*[text()="Publication number"]/following::*[1]/text()').extract()
+#         if now:
+#             item['Publication_number'] = now[0]
+#         else:
+#             item['Publication_number'] = ''
 
-        now = sel.xpath('//*[text()="Publication type"]/following::*[1]/text()').extract()
-        if now:
-            item['Publication_type'] = now[0]
-        else:
-            item['Publication_type'] = ''
+#         now = sel.xpath('//*[text()="Publication type"]/following::*[1]/text()').extract()
+#         if now:
+#             item['Publication_type'] = now[0]
+#         else:
+#             item['Publication_type'] = ''
 
-        now = sel.xpath('//*[text()="Publication date"]/following::*[1]/text()').extract()
-        if now:
-            item['Publication_date'] = now[0]
-        else:
-            item['Publication_date'] = ''
+#         now = sel.xpath('//*[text()="Publication date"]/following::*[1]/text()').extract()
+#         if now:
+#             item['Publication_date'] = now[0]
+#         else:
+#             item['Publication_date'] = ''
 
-        now = sel.xpath('//*[text()="Original Assignee"]/parent::*//span[@class="patent-bibdata-value-list"]/span/a//text()').extract()
-        if now:
-            item['Original_Assignee'] = now[0]
-        else:
-            item['Original_Assignee'] = ''
+#         now = sel.xpath('//*[text()="Original Assignee"]/parent::*//span[@class="patent-bibdata-value-list"]/span/a//text()').extract()
+#         if now:
+#             item['Original_Assignee'] = now[0]
+#         else:
+#             item['Original_Assignee'] = ''
 
-        now = sel.xpath('//*[text()="Filing date"]/following::*[1]/text()').extract()
-        if now:
-            item['Filing_date'] = now[0]
-        else:
-            item['Filing_date'] = ''
+#         now = sel.xpath('//*[text()="Filing date"]/following::*[1]/text()').extract()
+#         if now:
+#             item['Filing_date'] = now[0]
+#         else:
+#             item['Filing_date'] = ''
 
-        now = sel.xpath('//*[text()="Application number"]/following::*[1]/text()').extract()
-        if now:
-            item['Application_number'] = now[0]
-        else:
-            item['Application_number'] = ''
+#         now = sel.xpath('//*[text()="Application number"]/following::*[1]/text()').extract()
+#         if now:
+#             item['Application_number'] = now[0]
+#         else:
+#             item['Application_number'] = ''
 
-        now = sel.xpath('//*[text()="Priority date"]/following::*[1]/text()').extract()
-        if now:
-            item['Priority_date'] = now[0]
-        else:
-            item['Priority_date'] = ''
+#         now = sel.xpath('//*[text()="Priority date"]/following::*[1]/text()').extract()
+#         if now:
+#             item['Priority_date'] = now[0]
+#         else:
+#             item['Priority_date'] = ''
         
-        now = sel.xpath('//*[text()="Inventors"]/parent::*//span[@class="patent-bibdata-value-list"]/span/a//text()').extract()
-        if now:
-            item['Inventors'] = now
-        else:
-            item["Inventors"] = ''
+#         now = sel.xpath('//*[text()="Inventors"]/parent::*//span[@class="patent-bibdata-value-list"]/span/a//text()').extract()
+#         if now:
+#             item['Inventors'] = now
+#         else:
+#             item["Inventors"] = ''
 
-        now = sel.xpath('//*[text()="Applicant"]/following::*[1]/text()').extract()
-        if now:
-            item['Applicant'] = now[0]
-        else:
-            item['Applicant'] = ''
+#         now = sel.xpath('//*[text()="Applicant"]/following::*[1]/text()').extract()
+#         if now:
+#             item['Applicant'] = now[0]
+#         else:
+#             item['Applicant'] = ''
 
-        now = sel.xpath('//*[text()="Export Citation"]/parent::*//span[@class="patent-bibdata-value-list"]/span/a//text()').extract()
+#         now = sel.xpath('//*[text()="Export Citation"]/parent::*//span[@class="patent-bibdata-value-list"]/span/a//text()').extract()
         
-        if now:
-            item['Export_Citation'] = now
-        else:
-            item["Export_Citation"] = ''
+#         if now:
+#             item['Export_Citation'] = now
+#         else:
+#             item["Export_Citation"] = ''
 
-        now = sel.xpath('//*[text()="Also published as"]/parent::*//span[@class="patent-bibdata-value-list"]/span/a//text()').extract()
+#         now = sel.xpath('//*[text()="Also published as"]/parent::*//span[@class="patent-bibdata-value-list"]/span/a//text()').extract()
         
-        if now:
-            item['Also_published_as'] = now
-        else:
-            item["Also_published_as"] = ''
-        #额外的参考链接
-        url = sel.xpath('//td[@colspan="2"]/span[@class="patent-bibdata-heading"]/parent::*//*[@class="patent-bibdata-value"]//a/@href').extract()
-        site = sel.xpath('//td[@colspan="2"]/span[@class="patent-bibdata-heading"]/parent::*//*[@class="patent-bibdata-value"]//a/text()').extract()
-        if now:
-            d = dict()
-            for i in range(len(site)):
-                if url[i]:
-                    d[site[i]] = url[i]
-                else:
-                    d[site[i]] = ''
-            item['External_Links'] = d
-        else:
-            item['External_Links'] = ''
+#         if now:
+#             item['Also_published_as'] = now
+#         else:
+#             item["Also_published_as"] = ''
+#         #额外的参考链接
+#         url = sel.xpath('//td[@colspan="2"]/span[@class="patent-bibdata-heading"]/parent::*//*[@class="patent-bibdata-value"]//a/@href').extract()
+#         site = sel.xpath('//td[@colspan="2"]/span[@class="patent-bibdata-heading"]/parent::*//*[@class="patent-bibdata-value"]//a/text()').extract()
+#         if now:
+#             d = dict()
+#             for i in range(len(site)):
+#                 if url[i]:
+#                     d[site[i]] = url[i]
+#                 else:
+#                     d[site[i]] = ''
+#             item['External_Links'] = d
+#         else:
+#             item['External_Links'] = ''
 
         
-        '''
-        不要描述信息，不然太多了
-        '''
-        #下面处理patent citations，这是一个引用的表格
+#         '''
+#         不要描述信息，不然太多了
+#         '''
+#         #下面处理patent citations，这是一个引用的表格
 
-        #这是专利的表头
-        tablehead = sel.xpath('//span[text()="Patent Citations"]/parent::*/following::*[1]//thead//th//text()').extract()
-        #这是第一列，Cited Patent
-        cited_patent = sel.xpath('//span[text()="Patent Citations"]/parent::*/following::*[1]//thead/parent::*//td/a/text()').extract()
-        #这是第二列第三列[col2,col3,col2,co3.....]
-        stclo = sel.xpath('//span[text()="Patent Citations"]/parent::*/following::*[1]//thead/parent::*[1]//td[@class="patent-data-table-td patent-date-value"]//text()').extract()
-        #这是第四列第五列
-        ffclo =  sel.xpath('//span[text()="Patent Citations"]/parent::*/following::*[1]//thead/parent::*[1]//td[@class="patent-data-table-td "]//text()').extract()
-        #下面就是把这四项合成一个表格了
-#'https://www.google.com/patents/US8720825?dq=aerospace&hl=en&sa=X&ved=0ahUKEwib9M3io-bXAhWqsVQKHUoTBcsQ6AEIKDAA'
-        #怎么和
-        if tablehead:
-            seccol = stclo[0::2]
-            thirdcol = stclo[1::2]
-            fifcol = ffclo[0::2]
-            fivcol = ffclo[1::2]
-            print tablehead
-            d = {
-                tablehead[0]:cited_patent,
-                tablehead[1]:seccol,
-                tablehead[2]:thirdcol,
-                tablehead[3]:fifcol,
-                tablehead[4]:fivcol
-            }
-            # print d
-            # table = DataFrame(d)
-            # print table
-            item['Cited_patent'] = d
-        else:
-            item['Cited_patent'] = ''
+#         #这是专利的表头
+#         tablehead = sel.xpath('//span[text()="Patent Citations"]/parent::*/following::*[1]//thead//th//text()').extract()
+#         #这是第一列，Cited Patent
+#         cited_patent = sel.xpath('//span[text()="Patent Citations"]/parent::*/following::*[1]//thead/parent::*//td/a/text()').extract()
+#         #这是第二列第三列[col2,col3,col2,co3.....]
+#         stclo = sel.xpath('//span[text()="Patent Citations"]/parent::*/following::*[1]//thead/parent::*[1]//td[@class="patent-data-table-td patent-date-value"]//text()').extract()
+#         #这是第四列第五列
+#         ffclo =  sel.xpath('//span[text()="Patent Citations"]/parent::*/following::*[1]//thead/parent::*[1]//td[@class="patent-data-table-td "]//text()').extract()
+#         #下面就是把这四项合成一个表格了
+# #'https://www.google.com/patents/US8720825?dq=aerospace&hl=en&sa=X&ved=0ahUKEwib9M3io-bXAhWqsVQKHUoTBcsQ6AEIKDAA'
+#         #怎么和
+#         if tablehead:
+#             seccol = stclo[0::2]
+#             thirdcol = stclo[1::2]
+#             fifcol = ffclo[0::2]
+#             fivcol = ffclo[1::2]
+#             print tablehead
+#             d = {
+#                 tablehead[0]:cited_patent,
+#                 tablehead[1]:seccol,
+#                 tablehead[2]:thirdcol,
+#                 tablehead[3]:fifcol,
+#                 tablehead[4]:fivcol
+#             }
+#             # print d
+#             # table = DataFrame(d)
+#             # print table
+#             item['Cited_patent'] = d
+#         else:
+#             item['Cited_patent'] = ''
 
 
-        #下面处理REFERENCED BY  
-        #这是专利的表头
-        tablehead = sel.xpath('//span[text()="Referenced by"]/parent::*/following::*[1]//thead//th//text()').extract()
-        #这是第一列，Cited Patent
-        cited_patent = sel.xpath('//span[text()="Referenced by"]/parent::*/following::*[1]//thead/parent::*//td/a/text()').extract()
-        #这是第二列第三列[col2,col3,col2,co3.....]
-        stclo = sel.xpath('//span[text()="Referenced by"]/parent::*/following::*[1]//thead/parent::*[1]//td[@class="patent-data-table-td patent-date-value"]//text()').extract()
-        #这是第四列第五列
-        ffclo =  sel.xpath('//span[text()="Referenced by"]/parent::*/following::*[1]//thead/parent::*[1]//td[@class="patent-data-table-td "]//text()').extract()
-        #下面就是把这四项合成一个表格了
-#'https://www.google.com/patents/US8720825?dq=aerospace&hl=en&sa=X&ved=0ahUKEwib9M3io-bXAhWqsVQKHUoTBcsQ6AEIKDAA'
-        #怎么和
-        if tablehead:
-            seccol = stclo[0::2]
-            thirdcol = stclo[1::2]
-            fifcol = ffclo[0::2]
-            fivcol = ffclo[1::2]
-            print tablehead
-            d = {
-                tablehead[0]:cited_patent,
-                tablehead[1]:seccol,
-                tablehead[2]:thirdcol,
-                tablehead[3]:fifcol,
-                tablehead[4]:fivcol
-            }
-            # print d
-            # table = DataFrame(d)
-            # print table
-            item['Referenced_by'] = d
-        else:
-            item['Referenced_by'] = ''
+#         #下面处理REFERENCED BY  
+#         #这是专利的表头
+#         tablehead = sel.xpath('//span[text()="Referenced by"]/parent::*/following::*[1]//thead//th//text()').extract()
+#         #这是第一列，Cited Patent
+#         cited_patent = sel.xpath('//span[text()="Referenced by"]/parent::*/following::*[1]//thead/parent::*//td/a/text()').extract()
+#         #这是第二列第三列[col2,col3,col2,co3.....]
+#         stclo = sel.xpath('//span[text()="Referenced by"]/parent::*/following::*[1]//thead/parent::*[1]//td[@class="patent-data-table-td patent-date-value"]//text()').extract()
+#         #这是第四列第五列
+#         ffclo =  sel.xpath('//span[text()="Referenced by"]/parent::*/following::*[1]//thead/parent::*[1]//td[@class="patent-data-table-td "]//text()').extract()
+#         #下面就是把这四项合成一个表格了
+# #'https://www.google.com/patents/US8720825?dq=aerospace&hl=en&sa=X&ved=0ahUKEwib9M3io-bXAhWqsVQKHUoTBcsQ6AEIKDAA'
+#         #怎么和
+#         if tablehead:
+#             seccol = stclo[0::2]
+#             thirdcol = stclo[1::2]
+#             fifcol = ffclo[0::2]
+#             fivcol = ffclo[1::2]
+#             print tablehead
+#             d = {
+#                 tablehead[0]:cited_patent,
+#                 tablehead[1]:seccol,
+#                 tablehead[2]:thirdcol,
+#                 tablehead[3]:fifcol,
+#                 tablehead[4]:fivcol
+#             }
+#             # print d
+#             # table = DataFrame(d)
+#             # print table
+#             item['Referenced_by'] = d
+#         else:
+#             item['Referenced_by'] = ''
 
 
 
@@ -331,19 +332,4 @@ class ScholarSpider(scrapy.Spider):
         '''
 
 
-
-        # i = GetauthorItem()
-        # url = response.url
-        # c = url.split('user=')
-        # i['ID'] = c[1].split('&')[0]
-        # i['authorurl'] = url
-        # i['Name'] = sel.xpath('//*[@id="gsc_prf_in"]/text()').extract()[0]
-        # Fields = sel.xpath('//*[contains(@href,"/citations?view_op=search_author")]/text()').extract()
-        # i['Fields'] = Fields
-        # Totalref = sel.xpath('//td[@class="gsc_rsb_std"]/text()').extract()
-        # if Totalref:
-        #     i['Totalref'] = Totalref[0]
-        # Affi = sel.xpath('//*[@id="gsc_prf_i"]//text()').extract()
-        # i['Affi'] = Affi[1:len(Affi) - len(Fields) - 1]
-        # coauthorurl = 'https://scholar.google.com/citations?view_op=list_colleagues&hl=zh-CN&user=' + response.url[
-        yield item
+       # yield item
