@@ -11,6 +11,7 @@ from scrapy import Field
 class GetpatentItem(scrapy.Item):
     # define the fields for your item here like:
     # name = scrapy.Field()
+    Url = Field()
     Title = Field()     #专利名称
     Category = Field()  #分类  # 专利类型  /发布类型  待定
     Country = Field()   #所属地域   /从专利号里截取
