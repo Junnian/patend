@@ -65,6 +65,7 @@ class ScholarSpider(scrapy.Spider):
     peopleUrl = set() #记录已经爬的主页
 
     def start_requests(self):
+        reqs = []
         while self.scrawl_ID.__len__():
             print self.scrawl_ID.__len__()
             field = self.scrawl_ID.pop()
@@ -72,8 +73,11 @@ class ScholarSpider(scrapy.Spider):
             # field = 'aerospace'
                    # https://www.google.com.hk/search?q=aerospace&tbm=pts&start=40
             url = 'https://www.google.com/search?q='+field+'&tbm=pts&start=00'
-            yield Request(url=url, callback=self.parse1)
-
+            # yield Request(url=url, callback=self.parse1)
+            req = Request(url= url,callback = self.parse1)
+            reqs.append(req)
+        return reqs
+        
     def parse1 (self, response):
         #这个解析函数先处理每个领域第一页的人，用selector
 
@@ -115,7 +119,7 @@ class ScholarSpider(scrapy.Spider):
         #     print('-----------4444----------------',nexturl_2)
         #     url = nexturl_2[1]
         #     yield Request(url = Url+url,callback = self.parse1,dont_filter=True)
-        if len(detailurls) == 10:
+        if len(detailurls) ==10:
             print('-----------8----------------')
             nowurl = response.url
             #得到下一页页码
@@ -383,7 +387,13 @@ class ScholarSpider(scrapy.Spider):
 
 
 
+        '''
+        1.分类的那个表格
+        2.把referenced 和 cited_patent 的链接写入文件
+        3.继续构造像人才那样的三到四级爬取
 
+
+        '''
 
 
 
