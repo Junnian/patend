@@ -49,4 +49,5 @@ class GetpatentItem(scrapy.Item):
 
     Cited_patent = Field()#是一个dict形式的表格，或字符串
     Referenced_by = Field()
+    Classification = Field()
     pass
