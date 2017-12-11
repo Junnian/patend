@@ -1,12 +1,19 @@
 # -*- coding: utf-8 -*-
 import scrapy
-
+from scrapy.spiders import CrawlSpider, Rule
+from getpatent.items import GetpatentItem
+from scrapy.http import Request
+from scrapy.selector import Selector
+import time
+from random import random
+from getpatent.settings import FIELD 
+# from getpatent.spiders.parse_info import parse_info
 
 class Patent2Spider(scrapy.Spider):
     name = 'patent2'
     
     allowed_domains = ['www.google.ca','www.google.com']
-    infilename = 'relpatents.txt'
+    infilename'relpatents.txt'
     outfilename = 'relpatents2.txt'
     # start_urls = []
     scrawl_url = set()
@@ -20,10 +27,9 @@ class Patent2Spider(scrapy.Spider):
        while self.scrawl_url.__len__():
             print self.scrawl_url.__len__()
             url = self.scrawl_url.pop()
-
             yield Request(url=url, callback=self.parse_info)
-
-    def parse_info(self, response):
+            
+    def parse_info(self,response):
 
         '''
         再加一个字段把当前url存下来
@@ -66,7 +72,7 @@ class Patent2Spider(scrapy.Spider):
         else:
             item['Publication_date'] = ''
 
-        now = sel.xpath('//*[text()="Original Assignee"]/parent::*//span[@class="patent-bibdata-value-list"]/span/a//text()').extract()
+        now = sel.xpath('//*[text()="Original Assignee"]/parent::*//span[@class="patent-bibdata-value-list"]/span//a//text()').extract()
         if now:
             item['Original_Assignee'] = now[0]
         else:
@@ -96,7 +102,7 @@ class Patent2Spider(scrapy.Spider):
         else:
             item["Inventors"] = ''
 
-        now = sel.xpath('//*[text()="Applicant"]/following::*[1]/text()').extract()
+        now = sel.xpath('//*[text()="Applicant"]/parent::*//span[@class="patent-bibdata-value-list"]/span/a//text()').extract()
         if now:
             item['Applicant'] = now[0]
         else:
@@ -210,13 +216,14 @@ class Patent2Spider(scrapy.Spider):
 
             # 第一列
             cs = sel.xpath('//span[text()="Classifications"]/parent::*/following::*[1]//thead/parent::*[1]//td[@class="patent-data-table-td "][1]//text()').extract()
-            print('********************',cs)
+            # print('********************',cs)
             d = dict()
+            item['Classification'] = ''
             if len(cs):
                 for i in range(len(cs)):
                     if cs[i] == "U.S. Classification":
                         a = sel.xpath('//td[text()="U.S. Classification"]/parent::*/td[@class="patent-data-table-td "]/span//text()').extract()
-                        d[cs[i].replace(',',' ')] = a
+                        d[cs[i].replace('.',' ')] = a
                     elif cs[i] == "International Classification":
                         a = sel.xpath('//td[text()="International Classification"]/parent::*/td[@class="patent-data-table-td "]/span//text()').extract()
                         d[cs[i]] = a
@@ -233,14 +240,12 @@ class Patent2Spider(scrapy.Spider):
                             f.write('\n')
            
                 item['Classification'] = d
-            else:
-                item['Classification'] = ''
-   
-            
+              
             #写下相关联的专利       
             with open(outfilename,'a+') as f:
                 for i in rel_patents:
                     if 'http' not in i:
-                        f.write(Url+i)
-                        f.write('\n')
+                        url = Url + i
+                    f.write(Url+i)
+                    f.write('\n')
         yield item
