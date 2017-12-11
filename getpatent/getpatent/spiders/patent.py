@@ -19,12 +19,12 @@ Biomedical engineering空格不用加下滑线
 
 Url = 'https://www.google.com'
 
-    
+outfilename = 'relpatents.txt' 
 class ScholarSpider(scrapy.Spider):
     name = 'patent'
     allowed_domains = ['www.google.ca','www.google.com']
     start_urls=[]
-    outfilename = 'relpatents.txt'
+    
     
     if FIELD==0:
         key1s = ['test'] #new

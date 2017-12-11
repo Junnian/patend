@@ -8,13 +8,13 @@ import time
 from random import random
 from getpatent.settings import FIELD 
 # from getpatent.spiders.parse_info import parse_info
-
+infilename = 'relpatents.txt'
+outfilename = 'relpatents2.txt'
 class Patent2Spider(scrapy.Spider):
     name = 'patent2'
     
     allowed_domains = ['www.google.ca','www.google.com']
-    infilename = 'relpatents.txt'
-    outfilename = 'relpatents2.txt'
+    
     # start_urls = []
     scrawl_url = set()
     peopleUrl =set()#记录以爬

@@ -9,12 +9,12 @@ from random import random
 from getpatent.settings import FIELD 
 from getpatent.spiders.parse_info import parse_info
 
-
+infilename='relpatents2.txt'
+outfilename = 'relpatents3.txt'
 class Patent3Spider(scrapy.Spider):
     name = 'patent3'
     allowed_domains = ['www.google.ca','www.google.com']
-    infilename='relpatents2.txt'
-    outfilename = 'relpatents3.txt'
+    
     # start_urls = []
     scrawl_url = set()
     peopleUrl =set()#记录以爬
