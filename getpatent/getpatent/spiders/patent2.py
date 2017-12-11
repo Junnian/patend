@@ -13,7 +13,7 @@ class Patent2Spider(scrapy.Spider):
     name = 'patent2'
     
     allowed_domains = ['www.google.ca','www.google.com']
-    infilename'relpatents.txt'
+    infilename = 'relpatents.txt'
     outfilename = 'relpatents2.txt'
     # start_urls = []
     scrawl_url = set()
@@ -28,7 +28,7 @@ class Patent2Spider(scrapy.Spider):
             print self.scrawl_url.__len__()
             url = self.scrawl_url.pop()
             yield Request(url=url, callback=self.parse_info)
-            
+
     def parse_info(self,response):
 
         '''

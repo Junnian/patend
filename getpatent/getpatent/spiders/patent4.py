@@ -13,7 +13,7 @@ from getpatent.spiders.parse_info import parse_info
 class Patent4Spider(scrapy.Spider):
     name = 'patent4'
     allowed_domains = ['www.google.ca','www.google.com']
-    infilename'relpatents3.txt'
+    infilename='relpatents3.txt'
     outfilename = 'relpatents4.txt'
     # start_urls = []
     scrawl_url = set()
