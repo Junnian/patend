@@ -22,7 +22,7 @@ FIELD = 0
 ROBOTSTXT_OBEY = False
 
 # Configure maximum concurrent requests performed by Scrapy (default: 16)
-CONCURRENT_REQUESTS = 100
+CONCURRENT_REQUESTS = 10
 
 # Configure a delay for requests for the same website (default: 0)
 # See http://scrapy.readthedocs.org/en/latest/topics/settings.html#download-delay
@@ -69,11 +69,11 @@ ITEM_PIPELINES = {
    'getpatent.pipelines.GetpatentPipeline': 300,
 }
 
-LOG_LEVEL = 'INFO'
+#LOG_LEVEL = 'INFO'
 # 禁止cookies:
-COOKIES_ENABLED = False
+#COOKIES_ENABLED = False
 #宽度优先
-SCHEDULER_ORDER = "BFO"
+#SCHEDULER_ORDER = "BFO"
 # Enable and configure the AutoThrottle extension (disabled by default)
 # See http://doc.scrapy.org/en/latest/topics/autothrottle.html
 #AUTOTHROTTLE_ENABLED = True

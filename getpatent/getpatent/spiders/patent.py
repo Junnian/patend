@@ -325,7 +325,7 @@ class ScholarSpider(scrapy.Spider):
 
         
         #下面处理表格：新建一个引用或被引用的list,修后见这个list写在文件里，供深入爬取使用
-        rel_patents = list()
+        rel_patents = set()
 
         #下面处理patent citations，这是一个引用的表格
 
@@ -335,7 +335,8 @@ class ScholarSpider(scrapy.Spider):
         #这是第一列，Cited Patent
         cited_patent = sel.xpath('//span[text()="Patent Citations"]/parent::*/following::*[1]//thead/parent::*//td/a/text()').extract()
         citedlist = sel.xpath('//span[text()="Patent Citations"]/parent::*/following::*[1]//thead/parent::*//td/a/@href').extract()
-        rel_patents = rel_patents + citedlist
+        for i in range(len(citedlist)):
+            rel_patents.add(citedlist[i])
           # 这是第二列第三列[col2,col3,col2,co3.....]
         stclo = sel.xpath('//span[text()="Patent Citations"]/parent::*/following::*[1]//thead/parent::*[1]//td[@class="patent-data-table-td patent-date-value"]//text()').extract()
         #这是第四列第五列
@@ -370,7 +371,8 @@ class ScholarSpider(scrapy.Spider):
         #这是第一列，Cited Patent
         cited_patent = sel.xpath('//span[text()="Referenced by"]/parent::*/following::*[1]//thead/parent::*//td/a/text()').extract()
         cited_patent = sel.xpath('//span[text()="Referenced by"]/parent::*/following::*[1]//thead/parent::*//td/a/@href').extract()
-        rel_patents = rel_patents + citedlist
+        for i in range(len(citedlist)):
+            rel_patents.add(citedlist[i])
         #这是第二列第三列[col2,col3,col2,co3.....]
         stclo = sel.xpath('//span[text()="Referenced by"]/parent::*/following::*[1]//thead/parent::*[1]//td[@class="patent-data-table-td patent-date-value"]//text()').extract()
         #这是第四列第五列
@@ -402,38 +404,45 @@ class ScholarSpider(scrapy.Spider):
 
             #这个表格处理的难点是，1，行数不固定，2，参数不固定，所以就不知道怎么存
 
-            # 第一列
-            cs = sel.xpath('//span[text()="Classifications"]/parent::*/following::*[1]//thead/parent::*[1]//td[@class="patent-data-table-td "][1]//text()').extract()
-            # print('********************',cs)
-            d = dict()
-            item['Classification'] = ''
-            if len(cs):
-                for i in range(len(cs)):
-                    if cs[i] == "U.S. Classification":
-                        a = sel.xpath('//td[text()="U.S. Classification"]/parent::*/td[@class="patent-data-table-td "]/span//text()').extract()
-                        d[cs[i].replace('.',' ')] = a
-                    elif cs[i] == "International Classification":
-                        a = sel.xpath('//td[text()="International Classification"]/parent::*/td[@class="patent-data-table-td "]/span//text()').extract()
-                        d[cs[i]] = a
-                    elif cs[i] == "Cooperative Classification":
-                        a = sel.xpath('//td[text()="Cooperative Classification"]/parent::*/td[@class="patent-data-table-td "]/span//text()').extract()
-                        d[cs[i]] = a
-                    elif cs[i] == "European Classification":
-                        a = sel.xpath('//td[text()="European Classification"]/parent::*/td[@class="patent-data-table-td "]/span//text()').extract()
-                        d[cs[i]] = a
-                    else:
-                        #测试用，要是遇到没见过的分类就写在文件里，后补充，xpath修改上边的text即可
-                        with open('otherclass.txt','a+') as f:
-                            f.write(cs[i])
-                            f.write('\n')
-           
-                item['Classification'] = d
-              
-            #写下相关联的专利       
-            with open(outfilename,'a+') as f:
-                for i in rel_patents:
-                    if 'http' not in i:
-                        url = Url + i
-                    f.write(Url+i)
+        # 第一列
+        cs = sel.xpath('//span[text()="Classifications"]/parent::*/following::*[1]//thead/parent::*[1]//td[@class="patent-data-table-td "][1]//text()').extract()
+        # print('********************',cs)
+        d = dict()
+        item['Classification'] = ''
+        if len(cs):
+            for i in range(len(cs)):
+                if cs[i] == "U.S. Classification":
+                    a = sel.xpath('//td[text()="U.S. Classification"]/parent::*/td[@class="patent-data-table-td "]/span//text()').extract()
+                    d[cs[i].replace('.',' ')] = a
+                elif cs[i] == "International Classification":
+                    a = sel.xpath('//td[text()="International Classification"]/parent::*/td[@class="patent-data-table-td "]/span//text()').extract()
+                    d[cs[i]] = a
+                elif cs[i] == "Cooperative Classification":
+                    a = sel.xpath('//td[text()="Cooperative Classification"]/parent::*/td[@class="patent-data-table-td "]/span//text()').extract()
+                    d[cs[i]] = a
+                elif cs[i] == "European Classification":
+                    a = sel.xpath('//td[text()="European Classification"]/parent::*/td[@class="patent-data-table-td "]/span//text()').extract()
+                    d[cs[i]] = a
+                else:
+                    #测试用，要是遇到没见过的分类就写在文件里，后补充，xpath修改上边的text即可
+                    with open('otherclass.txt','a+') as f:
+                        f.write(cs[i])
+                        f.write('\n')
+       
+            item['Classification'] = d
+          
+        #写下相关联的专利       
+        with open(outfilename,'a+') as f:
+            # for i in rel_patents:
+            #     if 'http' not in i:
+            #         url = Url + i
+            #     f.write(Url+i)
+            #     f.write('\n')
+            while rel_patents.__len__():
+                url = rel_patents.pop()
+                if 'http' not in url:
+                    url = Url + url
+                if '/patents/' in url:
+                    f.write(url)
                     f.write('\n')
         yield item
