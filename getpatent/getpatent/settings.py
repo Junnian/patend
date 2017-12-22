@@ -15,6 +15,31 @@ SPIDER_MODULES = ['getpatent.spiders']
 NEWSPIDER_MODULE = 'getpatent.spiders'
 
 FIELD = 0
+start_urls=[]
+if FIELD == 0:
+    key1s = ['test']  # new
+    key2s = ['test']  # key
+if FIELD == 1:
+    key1s = ['aerospace']  # new
+    key2s = ['aerospace']  # key
+if FIELD == 2:
+    key1s = ['bigdata']
+    key2s = ['bigData', 'bigData2', 'big_data']
+if FIELD == 3:
+    key1s = ['infornet']
+    key2s = ['informationNetworks']
+if FIELD == 4:
+    key1s = ['newM']
+    key2s = ['newMaterials']
+if FIELD == 5:
+    key1s = ['QC']
+    key2s = ['quantumCommunication']
+if FIELD == 6:
+    key1s = ['ShipB']
+    key2s = ['shipBuilding']
+if FIELD == 7:
+    key1s = ['biology']
+    key2s = ['biology', 'Biological Engineering']
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
 #USER_AGENT = 'getpatent (+http://www.yourdomain.com)'
 
